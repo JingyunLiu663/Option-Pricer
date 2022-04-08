@@ -46,7 +46,8 @@ class Option_Pricer:
         self.american.pack_forget()
         self.about.pack_forget()
         self.top_win.title('Implied Volatility')
-        self.volatility.config(bg='lightblue')
+        self.volatility.config(bg='white')
+        self.setVolatility()
 
     def useAsian(self):
         self.asian.pack(fill=tk.BOTH, expand=True)
@@ -78,7 +79,6 @@ class Option_Pricer:
         self.setAbout()
 
     def setEuropean(self):
-        print()
         # Initialization the European option page
         # Label(self.european, text = 'European Option', fg = 'black', bg = 'white', font=("Times New Roman", 10, "bold")).grid(row=0, column=0, sticky='w')
         Label(self.european, text='Spot Price: ', fg='black', bg='white', font=("Times New Roman", 10, "bold")).grid(
@@ -126,6 +126,56 @@ class Option_Pricer:
         Label(self.european, text='Result: ', fg='black', bg='white', font=("Times New Roman", 10, "bold")).grid(row=4, column=0, sticky='w')
         self.european_result = Text(self.european, height=12, width=67, borderwidth=2)
         self.european_result.place(x=5, y=160)
+
+    def setVolatility(self):
+        Label(self.volatility, text='Spot Price: ', fg='black', bg='white', font=("Times New Roman", 10, "bold")).grid(
+            row=0, column=0, sticky='w', pady=5)
+        self.input_spot_price_volatility = Text(self.volatility, height=1, width=21, borderwidth=2)
+        self.input_spot_price_volatility.grid(row=0, column=1, sticky='w')
+        Label(self.volatility, text='   Strike Price: ', fg='black', bg='white',
+              font=("Times New Roman", 10, "bold")).grid(row=0, column=2, sticky='w')
+
+        self.input_strike_price_volatility = Text(self.volatility, height=1, width=21, borderwidth=2)
+        self.input_strike_price_volatility.grid(row=0, column=3, sticky='w')
+
+        Label(self.volatility, text='Market Rate: ', fg='black', bg='white', font=("Times New Roman", 10, "bold")).grid(
+            row=1, column=0, sticky='w', pady=10)
+        self.input_rise_free_rate_volatility = Text(self.volatility, height=1, width=21, borderwidth=2)
+        self.input_rise_free_rate_volatility.grid(row=1, column=1, sticky='w')
+
+        Label(self.volatility, text='   Start Time: ', fg='black', bg='white', font=("Times New Roman", 10, "bold")).grid(
+            row=1, column=2, sticky='w')
+        self.input_start_time_volatility = Text(self.volatility, height=1, width=21, borderwidth=2)
+        self.input_start_time_volatility.grid(row=1, column=3, sticky='w')
+        self.input_start_time_volatility.insert(INSERT, "dd/MM/yyyy")
+        Label(self.volatility, text='Maturity: ', fg='black', bg='white', font=("Times New Roman", 10, "bold")).grid(
+            row=2, column=0, sticky='w')
+
+        self.input_maturity_volatility = Text(self.volatility, height=1, width=21, borderwidth=2)
+        self.input_maturity_volatility.grid(row=2, column=1, sticky='w')
+        self.input_maturity_volatility.insert(INSERT, "dd/MM/yyyy")
+        Label(self.volatility, text='   Volatility: ', fg='black', bg='white', font=("Times New Roman", 10, "bold")).grid(
+            row=2, column=2, sticky='w')
+        self.input_volatility_volatility = Text(self.volatility, height=1, width=21, borderwidth=2)
+        self.input_volatility_volatility.grid(row=2, column=3, sticky='w')
+        Label(self.volatility, text='Option Type: ', fg='black', bg='white', font=("Times New Roman", 10, "bold")).grid(
+            row=3, column=0, sticky='w', pady=10)
+        self.select_option_volatility = StringVar()
+        self.input_option_volatility = ttk.Combobox(self.volatility, width=15, textvariable=self.select_option_european)
+        self.input_option_volatility.grid(row=3, column=1, sticky='w')
+        self.input_option_volatility['values'] = ('Call Option', 'Put Option')
+        self.input_option_volatility.current(0)
+
+        self.clear_volatility = Button(self.volatility, text="Clear", width=10, command=self.clearEuropean)
+        self.clear_volatility.grid(row=3, column=2, sticky='w')
+        self.clear_volatility = Button(self.volatility, text="Submit", width=10, command=self.doEuropeanOption)
+        self.clear_volatility.grid(row=3, column=3, sticky='w')
+
+        Label(self.volatility, text='Result: ', fg='black', bg='white', font=("Times New Roman", 10, "bold")).grid(row=4,
+                                                                                                                 column=0,
+                                                                                                                 sticky='w')
+        self.european_volatility = Text(self.volatility, height=12, width=67, borderwidth=2)
+        self.european_volatility.place(x=5, y=160)
 
     def setAbout(self):
         # self.about.grid(row=0, column=0, sticky='w')
