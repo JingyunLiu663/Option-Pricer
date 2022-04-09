@@ -192,7 +192,7 @@ class Option_Pricer:
         Label(self.volatility, text='Result: ', fg='black', bg='white', font=("Times New Roman", 10, "bold")).grid(row=4,
                                                                                                                  column=0,
                                                                                                                  sticky='w')
-        self.european_volatility = Text(self.volatility, height=12, width=67, borderwidth=2)
+        self.european_volatility = Text(self.volatility, height=13, width=67, borderwidth=2)
         self.european_volatility.place(x=5, y=160)
 
     def setAbout(self):

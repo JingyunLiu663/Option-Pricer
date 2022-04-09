@@ -53,7 +53,6 @@ def Black_Schonles_Formulas(S, K, t, T, sigma, r, option_type):
     day1 = datetime.date((int)(start[2]), (int)(start[1]), (int)(start[0]))
     day2 = datetime.date((int)(end[2]), (int)(end[1]), (int)(end[0]))
     period = abs((int)((day1 - day2).days)) / 365
-    print(period)
 
     d1 = (np.log(S / K) + (r + 0.5 * sigma ** 2) * period) / (sigma * np.sqrt(period))
     d2 = (np.log(S / K) + (r - 0.5 * sigma ** 2) * (period)) / (sigma * np.sqrt(period))
@@ -64,3 +63,47 @@ def Black_Schonles_Formulas(S, K, t, T, sigma, r, option_type):
         return call
     else:
         return put
+
+
+def vega_dividend(S, K, t, T, r, q, sigma):
+    '''
+    S: spot price
+    K: strike price
+    T: time to maturity
+    r: interest rate
+    sigma: volatility of underlying asset
+    q: continuous dividend rate
+    '''
+    period = (T - t) / 365
+    d1 = (np.log(S / K) + (r - q + 0.5 * sigma ** 2) * period) / (sigma * np.sqrt(period))
+    vega = (1 / np.sqrt(2 * np.pi)) * S * np.exp(-q * period) * np.sqrt(period) * np.exp((-norm.cdf(d1, 0.0, 1.0) ** 2) * 0.5)
+    vega = S * np.exp(-q * period) * np.sqrt(period) * norm.pdf(d1, 0.0, 1.0)
+    return vega
+
+
+def Implied(S, K, t, T, True_Val, r, q, option_type):
+    r = 0.04
+    q = 0.2
+    period = (T - t) / 365
+    sigma_hat = np.sqrt(2 * abs((np.log(S / K) + (r - q) * period) / period))
+    tol = 1e-8
+    max_num = 100
+    sigma_differ = 1
+    n = 1
+    sigma = sigma_hat
+    # Check whether implied volatility reachable (must be arbitrage-free)
+    if option_type == 'C':
+        if True_Val < S * np.exp(-q * period) - K * np.exp(-r * period) or True_Val >= S * np.exp(-q * period):
+            return np.nan
+    if option_type == 'P':
+        if True_Val < K * np.exp(-r * period) - S * np.exp(-q * period) or True_Val >= K * np.exp(-r * period):
+            return np.nan
+
+    while sigma_differ >= tol and n < max_num:
+        val = Black_Schonles_Formulas_new(S, K, t, T, r, sigma, q, option_type)
+        vega = vega_dividend(S, K, t, T, r, q, sigma)
+        increment = (val - True_Val) / vega
+        sigma = sigma - increment
+        n = n + 1
+        sigma_differ = abs(increment)
+    return sigma
