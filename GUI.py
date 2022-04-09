@@ -607,6 +607,13 @@ class Option_Pricer:
         self.input_option_american['values'] = ('Call Option', 'Put Option')
         self.input_option_american.current(0)
 
+        self.clear_american = Button(self.american, text="Clear", width=10,
+                                             command=self.clearAmerican)
+        self.clear_american.place(x=320, y=110)
+        self.submit_american = Button(self.american, text="Submit", width=10,
+                                              command=self.doAmerican)
+        self.submit_american.place(x=410, y=110)
+
         Label(self.american, text='Result: ', fg='black', bg='white', font=("Times New Roman", 12, "bold")).grid(row=4, column=0, sticky='w')
         self.result_american = Text(self.american, height=13, width=82, borderwidth=2)
         self.result_american.place(x=5, y=175)
@@ -847,7 +854,6 @@ class Option_Pricer:
     def doGeometricBasket(self):
         print("Geometric Basket")
         try:
-            print()
             S1 = (float)(self.input_spot_price1_geometric_basket.get("1.0", "end"))
             S2 = (float)(self.input_spot_price2_geometric_basket.get("1.0", "end"))
             sigma1 = (float)(self.input_volatility1_geometric_basket.get("1.0", "end"))
@@ -867,6 +873,20 @@ class Option_Pricer:
 
     def doAmerican(self):
         print("American")
+        try:
+            S = (float) (self.input_spot_price_american.get("1.0", "end"))
+            sigma = (float) (self.input_volatility_american.get("1.0", "end"))
+            r = (float)(self.input_rise_free_rate_american.get("1.0", "end"))
+            T = (float)(self.input_maturity_american.get("1.0", "end"))
+            K = (float)(self.input_strike_american.get("1.0", "end"))
+            steps_num = (float) (self.input_steps_american.get("1.0", "end"))
+            option = self.input_option_american.get()
+            # Result here **************
+            # result = 调你们的函数
+            # self.result_american(INSERT, result)
+
+        except Exception as res:
+            messagebox.showerror('Error', 'Input format error, please check your input.')
 
 
     def start(self):
