@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import *
-from tkinter import ttk
+from tkinter import ttk, messagebox
+
+from EuropeanOption import Black_Schonles_Formulas
 
 
 class Option_Pricer:
@@ -27,7 +29,8 @@ class Option_Pricer:
     # Set the
     def initComponments(self):
         self.european.pack(fill=tk.BOTH, expand=True)
-        self.european.config(bg='lightblue')
+        self.european.config(bg='white')
+        self.setEuropean()
 
     def useEuropean(self):
         self.european.pack(fill=tk.BOTH, expand=True)
@@ -110,8 +113,12 @@ class Option_Pricer:
             row=2, column=2, sticky='w')
         self.input_volatility_european = Text(self.european, height=1, width=21, borderwidth=2)
         self.input_volatility_european.grid(row=2, column=3, sticky='w')
+
+
+
         Label(self.european, text='Option Type: ', fg='black', bg='white', font=("Times New Roman", 10, "bold")).grid(
             row=3, column=0, sticky='w', pady=10)
+
         self.select_option_european = StringVar()
         self.input_option_european = ttk.Combobox(self.european, width=15, textvariable=self.select_option_european)
         self.input_option_european.grid(row=3, column=1, sticky='w')
@@ -124,7 +131,7 @@ class Option_Pricer:
         self.clear_european.grid(row=3, column=3, sticky='w')
 
         Label(self.european, text='Result: ', fg='black', bg='white', font=("Times New Roman", 10, "bold")).grid(row=4, column=0, sticky='w')
-        self.european_result = Text(self.european, height=12, width=67, borderwidth=2)
+        self.european_result = Text(self.european, height=13, width=67, borderwidth=2)
         self.european_result.place(x=5, y=160)
 
     def setVolatility(self):
@@ -154,10 +161,11 @@ class Option_Pricer:
         self.input_maturity_volatility = Text(self.volatility, height=1, width=21, borderwidth=2)
         self.input_maturity_volatility.grid(row=2, column=1, sticky='w')
         self.input_maturity_volatility.insert(INSERT, "dd/MM/yyyy")
-        Label(self.volatility, text='   Volatility: ', fg='black', bg='white', font=("Times New Roman", 10, "bold")).grid(
+        Label(self.volatility, text='   Option Price: ', fg='black', bg='white', font=("Times New Roman", 10, "bold")).grid(
             row=2, column=2, sticky='w')
-        self.input_volatility_volatility = Text(self.volatility, height=1, width=21, borderwidth=2)
-        self.input_volatility_volatility.grid(row=2, column=3, sticky='w')
+        self.input_option_price_volatility = Text(self.volatility, height=1, width=21, borderwidth=2)
+        self.input_option_price_volatility.grid(row=2, column=3, sticky='w')
+
         Label(self.volatility, text='Option Type: ', fg='black', bg='white', font=("Times New Roman", 10, "bold")).grid(
             row=3, column=0, sticky='w', pady=10)
         self.select_option_volatility = StringVar()
@@ -166,9 +174,9 @@ class Option_Pricer:
         self.input_option_volatility['values'] = ('Call Option', 'Put Option')
         self.input_option_volatility.current(0)
 
-        self.clear_volatility = Button(self.volatility, text="Clear", width=10, command=self.clearEuropean)
+        self.clear_volatility = Button(self.volatility, text="Clear", width=10, command=self.clearVolatility)
         self.clear_volatility.grid(row=3, column=2, sticky='w')
-        self.clear_volatility = Button(self.volatility, text="Submit", width=10, command=self.doEuropeanOption)
+        self.clear_volatility = Button(self.volatility, text="Submit", width=10, command=self.doVolatility)
         self.clear_volatility.grid(row=3, column=3, sticky='w')
 
         Label(self.volatility, text='Result: ', fg='black', bg='white', font=("Times New Roman", 10, "bold")).grid(row=4,
@@ -208,7 +216,7 @@ class Option_Pricer:
         photo = PhotoImage(file="logo.gif")
         Label(self.about, bg='white', image=photo).grid(row=11, column=0, sticky='w')
 
-    # Clear all fields in the page
+    # Clear all fields in the European option page
     def clearEuropean(self):
         self.input_spot_price_european.delete('1.0','end')
         self.input_maturity_european.delete('1.0', 'end')
@@ -219,10 +227,52 @@ class Option_Pricer:
         self.input_option_european['values'] = ('Call Option', 'Put Option')
         self.input_option_european.current(0)
 
-    # Calculate the result and output to the result field
-    def doEuropeanOption(self):
+    # Clear all fields in the volatility page
+    def clearVolatility(self):
+        self.input_spot_price_volatility.delete('1.0', 'end')
+        self.input_maturity_volatility.delete('1.0', 'end')
+        self.input_rise_free_rate_volatility.delete('1.0', 'end')
+        self.input_start_time_volatility.delete('1.0', 'end')
+        self.input_option_price_volatility.delete('1.0', 'end')
+        self.input_strike_price_volatility.delete('1.0', 'end')
+        self.input_option_volatility['values'] = ('Call Option', 'Put Option')
+        self.input_option_volatility.current(0)
 
-        print("123")
+    # Calculate the European option price
+    def doEuropeanOption(self):
+        try:
+            S = (float) (self.input_spot_price_european.get("1.0", "end"))
+            K = (float) (self.input_strike_price_european.get("1.0", "end"))
+            t = (str) (self.input_start_time_european.get("1.0", "end"))
+            T = (str) (self.input_maturity_european.get("1.0", "end"))
+            r = (float) (self.input_rise_free_rate_european.get("1.0", "end"))
+            sigma = (float) (self.input_volatility_european.get("1.0", "end"))
+            option = self.input_option_european.get()
+            if option == "Call Option":
+                option = 'C'
+            else:
+                option = 'P'
+            result = "Spot Price: " + self.input_spot_price_european.get("1.0","end") + "Strike Price: " + self.input_strike_price_european.get("1.0", "end") + "Start Time: " + t + "End Time: " + T + \
+                     "Risk free rate: " + self.input_rise_free_rate_european.get("1.0", "end") + "Volatility: " + self.input_volatility_european.get("1.0", "end") + "Option Type: " + self.input_option_european.get()
+            result += "\n\n\n" + "Result: " +  str(Black_Schonles_Formulas(S, K, t, T, sigma, r, option))
+            self.european_result.insert(INSERT, result)
+        except Exception as result:
+            messagebox.showerror('Error', 'Input format error, please check your input.')
+
+    # Calculate the volatility
+    def doVolatility(self):
+        try:
+            S = (float)(self.input_spot_price_volatility.get("1.0", "end"))
+            K = (float)(self.input_strike_price_volatility.get("1.0", "end"))
+            t = (str)(self.input_start_time_volatility.get("1.0", "end"))
+            T = (str)(self.input_maturity_volatility.get("1.0", "end"))
+            r = (float)(self.input_rise_free_rate_volatility.get("1.0", "end"))
+            sigma = (float)(self.input_option_price_volatility.get("1.0", "end"))
+            option = self.input_option_volatility.get()
+
+        except Exception as res:
+            messagebox.showerror('Error', 'Input format error, please check your input.')
+
 
     def start(self):
         self.top_win.config(menu=self.menus)
