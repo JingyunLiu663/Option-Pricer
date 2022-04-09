@@ -74,19 +74,26 @@ def vega_dividend(S, K, t, T, r, q, sigma):
     sigma: volatility of underlying asset
     q: continuous dividend rate
     '''
-    period = (T - t) / 365
+    start = t.split('/')
+    end = T.split('/')
+    day1 = datetime.date((int)(start[2]), (int)(start[1]), (int)(start[0]))
+    day2 = datetime.date((int)(end[2]), (int)(end[1]), (int)(end[0]))
+    period = abs((int)((day1 - day2).days)) / 365
     d1 = (np.log(S / K) + (r - q + 0.5 * sigma ** 2) * period) / (sigma * np.sqrt(period))
     vega = (1 / np.sqrt(2 * np.pi)) * S * np.exp(-q * period) * np.sqrt(period) * np.exp((-norm.cdf(d1, 0.0, 1.0) ** 2) * 0.5)
     vega = S * np.exp(-q * period) * np.sqrt(period) * norm.pdf(d1, 0.0, 1.0)
     return vega
 
 
-def Implied(S, K, t, T, True_Val, r, q, option_type):
-    r = 0.04
-    q = 0.2
-    period = (T - t) / 365
+def Implied_Volatility(S, K, t, T, True_Val, r, q, option_type):
+    start = t.split('/')
+    end = T.split('/')
+    day1 = datetime.date((int)(start[2]), (int)(start[1]), (int)(start[0]))
+    day2 = datetime.date((int)(end[2]), (int)(end[1]), (int)(end[0]))
+    period = abs((int)((day1 - day2).days)) / 365
+
     sigma_hat = np.sqrt(2 * abs((np.log(S / K) + (r - q) * period) / period))
-    tol = 1e-8
+    tol = 1e-5
     max_num = 100
     sigma_differ = 1
     n = 1
