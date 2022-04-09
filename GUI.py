@@ -808,8 +808,8 @@ class Option_Pricer:
             r = (float) (self.input_rise_free_rate_arithmetic_asian.get("1.0", "end"))
             T = (float) (self.input_maturity_arithmetic_asian.get("1.0", "end"))
             sigma = (float) (self.input_volatility_arithmetic_asian.get("1.0", "end"))
-            observe_num = (float) (self.input_observe_arithmetic_asian.get("1.0", "end"))
-            path_num = (float) (self.input_path_arithmetic_asian.get("1.0", "end"))
+            observe_num = (int) (self.input_observe_arithmetic_asian.get("1.0", "end"))
+            path_num = (int) (self.input_path_arithmetic_asian.get("1.0", "end"))
             option = self.input_option_arithmetic_asian.get()
             control = self.input_control_arithmetic_asian.get()
 
@@ -840,7 +840,7 @@ class Option_Pricer:
             r = (float) (self.input_rise_free_rate_geometric_asian.get("1.0", "end"))
             T = (float) (self.input_maturity_geometric_asian.get("1.0", "end"))
             sigma = (float) (self.input_volatility_geometric_asian.get("1.0", "end"))
-            observe_num = (float) (self.input_observe_geometric_asian.get("1.0", "end"))
+            observe_num = (int) (self.input_observe_geometric_asian.get("1.0", "end"))
             option = self.input_option_geometric_asian.get()
             calculation = self.input_calculation_geometric_asian.get()
 
@@ -855,7 +855,7 @@ class Option_Pricer:
                 # To be modified
                 result = arithmatic_asian_option(S, sigma, r, T, K, observe_num, option, 100, "geo")
 
-            self.result_geometric_asian(INSERT, result)
+            self.result_geometric_asian.insert(INSERT, result)
 
         except Exception:
             messagebox.showerror('Error', 'Input format error, please check your input.')
@@ -871,7 +871,7 @@ class Option_Pricer:
             T = (float) (self.input_maturity_arithmetic_basket.get("1.0", "end"))
             K = (float) (self.input_strike_price_arithmetic_basket.get("1.0", "end"))
             correlation = (float) (self.input_correlation_arithmetic_basket.get("1.0", "end"))
-            path = (float) (self.input_path_arithmetic_basket.get("1.0", "end"))
+            path = (int) (self.input_path_arithmetic_basket.get("1.0", "end"))
             option = self.input_option_arithmetic_basket.get()
             control = self.input_control_arithmetic_basket.get()
 
@@ -885,7 +885,7 @@ class Option_Pricer:
             elif control == "Standard MC":
                 result = arithmatic_basket_option(S1, S2, sigma1, sigma2, correlation, r, T, K, option, path, 'arith')
 
-            self.result_arithmetic_basket(INSERT, result)
+            self.result_arithmetic_basket.insert(INSERT, result)
 
         except Exception as res:
             messagebox.showerror('Error', 'Input format error, please check your input.')
@@ -914,7 +914,7 @@ class Option_Pricer:
             elif calculation == "Standard MC":
                 result = arithmatic_basket_option(S1, S2, sigma1, sigma2, correlation, r, T, K, option, 100, 'geo')
 
-            self.result_geometric_basket(INSERT, result)
+            self.result_geometric_basket.insert(INSERT, result)
 
         except Exception as res:
             messagebox.showerror('Error', 'Input format error, please check your input.')
@@ -927,7 +927,7 @@ class Option_Pricer:
             r = (float)(self.input_rise_free_rate_american.get("1.0", "end"))
             T = (float)(self.input_maturity_american.get("1.0", "end"))
             K = (float)(self.input_strike_american.get("1.0", "end"))
-            steps_num = (float) (self.input_steps_american.get("1.0", "end"))
+            steps_num = (int) (self.input_steps_american.get("1.0", "end"))
             option = self.input_option_american.get()
 
             if option == "Call Option":
@@ -937,7 +937,7 @@ class Option_Pricer:
 
             result = binomial_tree_american_option(S, sigma, r, T, K, steps_num, option)
 
-            self.result_american(INSERT, result)
+            self.result_american.insert(INSERT, result)
 
         except Exception as res:
             messagebox.showerror('Error', 'Input format error, please check your input.')
