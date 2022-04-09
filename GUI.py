@@ -16,25 +16,27 @@ class Option_Pricer:
         self.menus.add_command(label="European Option", command=self.useEuropean)
         self.menus.add_command(label="Implied Volatility", command=self.useVolatility)
 
-        self.menus.add_command(label="Arithmetic Asian Option")
+        self.menus.add_command(label="Arithmetic Asian Option", command=self.useArithmeticAsian)
         self.menus.add_command(label="Geometric Asian Option", command=self.useGeometricAsian)
 
-        self.menus.add_command(label="Arithmetic Basket Option")
+        self.menus.add_command(label="Arithmetic Basket Option", command=self.useArithmeticBasket)
         self.menus.add_command(label="Geometric Basket Option")
+
         self.menus.add_command(label="American Binominal Tree", command=self.useAmerican)
 
         self.menus.add_command(label="About", command=self.gotoAbout)
         self.menus.add_command(label="Exit", command=self.top_win.quit)
         # Set frames
-        # European option
+        # European Option
         self.european = tk.Frame(self.top_win, relief='ridge', borderwidth=3)
         self.volatility = tk.Frame(self.top_win, relief='ridge', borderwidth=3)
-        # Asian
+        # Asian Option
         self.geometric_asian = tk.Frame(self.top_win, relief='ridge', borderwidth=3)
         self.arithmetic_asian = tk.Frame(self.top_win, relief='ridge', borderwidth=3)
+        # Basket Option
+        self.geometric_basket = tk.Frame(self.top_win, relief='ridge', borderwidth=3)
+        self.arithmetic_basket = tk.Frame(self.top_win, relief='ridge', borderwidth=3)
 
-
-        self.asian = tk.Frame(self.top_win, relief='ridge', borderwidth=3)
         self.american = tk.Frame(self.top_win, relief='ridge', borderwidth=3)
         self.about = tk.Frame(self.top_win, relief='ridge', borderwidth=3)
         self.initComponments()
@@ -48,7 +50,10 @@ class Option_Pricer:
     def useEuropean(self):
         self.european.pack(fill=tk.BOTH, expand=True)
         self.volatility.pack_forget()
+        self.arithmetic_asian.pack_forget()
         self.geometric_asian.pack_forget()
+        self.arithmetic_basket.pack_forget()
+        self.geometric_basket.pack_forget()
         self.american.pack_forget()
         self.about.pack_forget()
         self.top_win.title('European Option')
@@ -59,25 +64,59 @@ class Option_Pricer:
         self.volatility.pack(fill=tk.BOTH, expand=True)
         self.european.pack_forget()
         self.geometric_asian.pack_forget()
+        self.arithmetic_asian.pack_forget()
+        self.arithmetic_basket.pack_forget()
+        self.geometric_basket.pack_forget()
         self.american.pack_forget()
         self.about.pack_forget()
         self.top_win.title('Implied Volatility')
         self.volatility.config(bg='white')
         self.setVolatility()
 
+    def useArithmeticAsian(self):
+        self.arithmetic_asian.pack(fill=tk.BOTH, expand=True)
+        self.european.pack_forget()
+        self.volatility.pack_forget()
+        self.geometric_asian.pack_forget()
+        self.arithmetic_basket.pack_forget()
+        self.geometric_basket.pack_forget()
+        self.american.pack_forget()
+        self.about.pack_forget()
+        self.top_win.title('Arithmetic Asian Option')
+        self.arithmetic_asian.config(bg='white')
+        self.setArithmeticAsian()
+
     def useGeometricAsian(self):
         self.geometric_asian.pack(fill=tk.BOTH, expand=True)
         self.european.pack_forget()
         self.volatility.pack_forget()
+        self.arithmetic_asian.pack_forget()
+        self.arithmetic_basket.pack_forget()
+        self.geometric_basket.pack_forget()
+
         self.american.pack_forget()
         self.about.pack_forget()
         self.top_win.title('Geometric Asian Option')
         self.geometric_asian.config(bg='White')
         self.setGeometricAsian()
 
+    def useArithmeticBasket(self):
+        self.arithmetic_basket.pack(fill=tk.BOTH, expand=True)
+        self.european.pack_forget()
+        self.volatility.pack_forget()
+        self.arithmetic_asian.pack_forget()
+        self.geometric_asian.pack_forget()
+        self.geometric_basket.pack_forget()
+        self.about.pack_forget()
+        self.top_win.title('Arithmetic Basket Option')
+        self.arithmetic_basket.config(bg='lightgreen')
+
+
+
     def useAmerican(self):
         self.american.pack(fill=tk.BOTH, expand=True)
         self.volatility.pack_forget()
+        self.arithmetic_asian.pack_forget()
         self.geometric_asian.pack_forget()
         self.european.pack_forget()
         self.about.pack_forget()
@@ -87,7 +126,10 @@ class Option_Pricer:
     def gotoAbout(self):
         self.about.pack(fill=tk.BOTH, expand=True)
         self.american.pack_forget()
+        self.arithmetic_asian.pack_forget()
         self.geometric_asian.pack_forget()
+        self.arithmetic_basket.pack_forget()
+        self.geometric_basket.pack_forget()
         self.european.pack_forget()
         self.volatility.pack_forget()
         self.top_win.title('About')
@@ -204,7 +246,88 @@ class Option_Pricer:
 
 
     def setArithmeticAsian(self):
-        print()
+        Label(self.arithmetic_asian, text='Spot Price: ', fg='black', bg='white',
+              font=("Times New Roman", 12, "bold")).grid(
+            row=0, column=0, sticky='w', pady=5)
+        self.input_spot_price_arithmetic_asian = Text(self.arithmetic_asian, height=1, width=23, borderwidth=2)
+        self.input_spot_price_arithmetic_asian.grid(row=0, column=1, sticky='w')
+
+        Label(self.arithmetic_asian, text='   Strike Price: ', fg='black', bg='white',
+              font=("Times New Roman", 12, "bold")).grid(row=0, column=2, sticky='w')
+        self.input_strike_price_arithmetic_asian = Text(self.arithmetic_asian, height=1, width=23, borderwidth=2)
+        self.input_strike_price_arithmetic_asian.grid(row=0, column=3, sticky='w')
+
+        Label(self.arithmetic_asian, text='Risk Free Rate: ', fg='black', bg='white',
+              font=("Times New Roman", 12, "bold")).grid(
+            row=1, column=0, sticky='w', pady=10)
+        self.input_rise_free_rate_arithmetic_asian = Text(self.arithmetic_asian, height=1, width=23, borderwidth=2)
+        self.input_rise_free_rate_arithmetic_asian.grid(row=1, column=1, sticky='w')
+
+        Label(self.arithmetic_asian, text='   Maturity: ', fg='black', bg='white',
+              font=("Times New Roman", 12, "bold")).grid(
+            row=1, column=2, sticky='w')
+        self.input_maturity_arithmetic_asian = Text(self.arithmetic_asian, height=1, width=23, borderwidth=2)
+        self.input_maturity_arithmetic_asian.grid(row=1, column=3, sticky='w')
+
+        Label(self.arithmetic_asian, text='Volatility: ', fg='black', bg='white',
+              font=("Times New Roman", 12, "bold")).grid(
+            row=2, column=0, sticky='w', pady=10)
+        self.input_volatility_arithmetic_asian = Text(self.arithmetic_asian, height=1, width=23, borderwidth=2)
+        self.input_volatility_arithmetic_asian.grid(row=2, column=1, sticky='w')
+
+        Label(self.arithmetic_asian, text='   Observe No.: ', fg='black', bg='white',
+              font=("Times New Roman", 12, "bold")).grid(
+            row=2, column=2, sticky='w')
+        self.input_observe_arithmetic_asian = Text(self.arithmetic_asian, height=1, width=23, borderwidth=2)
+        self.input_observe_arithmetic_asian.grid(row=2, column=3, sticky='w')
+
+        Label(self.arithmetic_asian, text='Option Type: ', fg='black', bg='white',
+              font=("Times New Roman", 12, "bold")).grid(
+            row=3, column=0, sticky='w', pady=10)
+        self.select_option_arithmetic_asian = StringVar()
+        self.input_option_arithmetic_asian = ttk.Combobox(self.arithmetic_asian, width=21,
+                                                         textvariable=self.select_option_arithmetic_asian)
+        self.input_option_arithmetic_asian.grid(row=3, column=1, sticky='w')
+        self.input_option_arithmetic_asian['values'] = ('Call Option', 'Put Option')
+        self.input_option_arithmetic_asian.current(0)
+
+        Label(self.arithmetic_asian, text='   Calculation: ', fg='black', bg='white',
+              font=("Times New Roman", 12, "bold")).grid(
+            row=3, column=2, sticky='w', pady=10)
+        self.select_calcualtion_arithmetic_asian = StringVar()
+        self.input_calcualtion_arithmetic_asian = ttk.Combobox(self.arithmetic_asian, width=21,
+                                                              textvariable=self.select_calcualtion_arithmetic_asian)
+        self.input_calcualtion_arithmetic_asian.grid(row=3, column=3, sticky='w')
+        self.input_calcualtion_arithmetic_asian['values'] = ('Closed-Form Fomula', 'Standard MC')
+        self.input_calcualtion_arithmetic_asian.current(0)
+
+        Label(self.arithmetic_asian, text='Result: ', fg='black', bg='white', font=("Times New Roman", 12, "bold")).grid(
+            row=5, column=0, sticky='w')
+
+        Label(self.arithmetic_asian, text='MC Path No.: ', fg='black', bg='white', font=("Times New Roman", 12, "bold")).grid(
+            row=4, column=0, sticky='w')
+        self.input_path_arithmetic_asian = Text(self.arithmetic_asian, height=1, width=23, borderwidth=2)
+        self.input_path_arithmetic_asian.grid(row=4, column=1, sticky='w')
+
+        Label(self.arithmetic_asian, text='   Control Variate: ', fg='black', bg='white',
+              font=("Times New Roman", 12, "bold")).grid(
+            row=4, column=2, sticky='w')
+        self.select_control_arithmetic_asian = StringVar()
+        self.input_control_arithmetic_asian = ttk.Combobox(self.arithmetic_asian, width=21,
+                                                               textvariable=self.select_control_arithmetic_asian)
+        self.input_control_arithmetic_asian.grid(row=4, column=3, sticky='w')
+        self.input_control_arithmetic_asian['values'] = ('No control variate', 'Geometric Asian option')
+        self.input_control_arithmetic_asian.current(0)
+
+        self.clear_arithmetic_asian = Button(self.arithmetic_asian, text="Clear", width=10,
+                                            command=self.clearArithmeticAsian)
+        self.clear_arithmetic_asian.place(x=220, y=193)
+        self.submit_arithmetic_asian = Button(self.arithmetic_asian, text="Submit", width=10,
+                                             command=self.doGeometricAsian)
+        self.submit_arithmetic_asian.place(x=120, y=193)
+
+        self.result_arithmetic_asian = Text(self.arithmetic_asian, height=10, width=82, borderwidth=2)
+        self.result_arithmetic_asian.place(x=5, y=225)
 
 
     def setGeometricAsian(self):
@@ -265,6 +388,10 @@ class Option_Pricer:
 
         self.result_geometric_asian = Text(self.geometric_asian, height=12, width=82, borderwidth=2)
         self.result_geometric_asian.place(x=5, y=195)
+
+
+    def setArithmeticBasket(self):
+        print()
 
 
     def setAbout(self):
@@ -331,6 +458,14 @@ class Option_Pricer:
         self.input_calcualtion_geometric_asian.current(0)
         self.input_option_geometric_asian['values'] = ('Call Option', 'Put Option')
         self.input_option_geometric_asian.current(0)
+
+    def clearArithmeticAsian(self):
+        self.input_maturity_arithmetic_asian.delete('1.0', 'end')
+        self.input_rise_free_rate_arithmetic_asian.delete('1.0', 'end')
+        self.input_volatility_arithmetic_asian.delete('1.0', 'end')
+        self.input_spot_price_arithmetic_asian.delete('1.0', 'end')
+        self.input_strike_price_arithmetic_asian.delete('1.0', 'end')
+        self.input_observe_arithmetic_asian.delete('1.0', 'end')
 
     # Calculate the European option price
     def doEuropeanOption(self):
