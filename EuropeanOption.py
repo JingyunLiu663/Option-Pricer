@@ -12,7 +12,7 @@ d2 = datetime.date(2018, 1, 1)
 print((d1 - d2).days)
 print((int)('04'))
 
-def Black_Schonles_Formulas_new(S, K, t, T, r, sigma, q, option_type):
+def Black_Schonles_Formulas_new(S, K, t, T, sigma, r, q, option_type):
     """
     S: spot price
     K: strike price
@@ -24,13 +24,15 @@ def Black_Schonles_Formulas_new(S, K, t, T, r, sigma, q, option_type):
     option_type: either call or put option
     """
 
-    T = 24
-    t = 16
-    period = (T - t) / 365
+    start = t.split('/')
+    end = T.split('/')
+    day1 = datetime.date((int)(start[2]), (int)(start[1]), (int)(start[0]))
+    day2 = datetime.date((int)(end[2]), (int)(end[1]), (int)(end[0]))
+    period = abs((int)((day1 - day2).days)) / 365
+
     d1 = (np.log(S / K) + (r - q + 0.5 * sigma ** 2) * period) / (sigma * np.sqrt(period))
     d2 = (np.log(S / K) + (r - q - 0.5 * sigma ** 2) * period) / (sigma * np.sqrt(period))
-    value = 0
-    if option_type.lower() == "c":
+    if option_type == "C":
         value = (S * np.exp(-q * period) * norm.cdf(d1, 0.0, 1.0) - K * np.exp(-r * period) * norm.cdf(d2, 0.0, 1.0))
     else:
         value = (K * np.exp(-r * period) * norm.cdf(-d2, 0.0, 1.0) - S * np.exp(-q * period) * norm.cdf(-d1, 0.0, 1.0))

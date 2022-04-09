@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import *
 from tkinter import ttk, messagebox
 
-from EuropeanOption import Black_Schonles_Formulas
+from EuropeanOption import Black_Schonles_Formulas, Black_Schonles_Formulas_new
 
 
 class Option_Pricer:
@@ -114,21 +114,25 @@ class Option_Pricer:
         self.input_volatility_european = Text(self.european, height=1, width=21, borderwidth=2)
         self.input_volatility_european.grid(row=2, column=3, sticky='w')
 
-
-
-        Label(self.european, text='Option Type: ', fg='black', bg='white', font=("Times New Roman", 10, "bold")).grid(
+        Label(self.european, text='Repo Rate: ', fg='black', bg='white', font=("Times New Roman", 10, "bold")).grid(
             row=3, column=0, sticky='w', pady=10)
+        self.input_repo_european = Text(self.european, height=1, width=21, borderwidth=2)
+        self.input_repo_european.grid(row=3, column=1, sticky='w')
+
+
+        Label(self.european, text='   Option Type: ', fg='black', bg='white', font=("Times New Roman", 10, "bold")).grid(
+            row=3, column=2, sticky='w', pady=10)
 
         self.select_option_european = StringVar()
-        self.input_option_european = ttk.Combobox(self.european, width=15, textvariable=self.select_option_european)
-        self.input_option_european.grid(row=3, column=1, sticky='w')
+        self.input_option_european = ttk.Combobox(self.european, width=10, textvariable=self.select_option_european)
+        self.input_option_european.grid(row=3, column=3, sticky='w')
         self.input_option_european['values'] = ('Call Option', 'Put Option')
         self.input_option_european.current(0)
 
-        self.clear_european = Button(self.european, text="Clear", width=10, command=self.clearEuropean)
-        self.clear_european.grid(row=3, column=2, sticky='w')
-        self.clear_european = Button(self.european, text="Submit", width=10, command=self.doEuropeanOption)
-        self.clear_european.grid(row=3, column=3, sticky='w')
+        self.clear_european = Button(self.european, text="Clear", width=6, command=self.clearEuropean)
+        self.clear_european.place(x=430, y=127)
+        self.clear_european = Button(self.european, text="Submit", width=6, command=self.doEuropeanOption)
+        self.clear_european.place(x=430, y=97)
 
         Label(self.european, text='Result: ', fg='black', bg='white', font=("Times New Roman", 10, "bold")).grid(row=4, column=0, sticky='w')
         self.european_result = Text(self.european, height=13, width=67, borderwidth=2)
@@ -166,18 +170,24 @@ class Option_Pricer:
         self.input_option_price_volatility = Text(self.volatility, height=1, width=21, borderwidth=2)
         self.input_option_price_volatility.grid(row=2, column=3, sticky='w')
 
-        Label(self.volatility, text='Option Type: ', fg='black', bg='white', font=("Times New Roman", 10, "bold")).grid(
+        Label(self.volatility, text='Repo Rate: ', fg='black', bg='white', font=("Times New Roman", 10, "bold")).grid(
             row=3, column=0, sticky='w', pady=10)
+        self.input_repo_volatility = Text(self.volatility, height=1, width=21, borderwidth=2)
+        self.input_repo_volatility.grid(row=3, column=1, sticky='w')
+
+
+        Label(self.volatility, text='   Option Type: ', fg='black', bg='white', font=("Times New Roman", 10, "bold")).grid(
+            row=3, column=2, sticky='w', pady=10)
         self.select_option_volatility = StringVar()
-        self.input_option_volatility = ttk.Combobox(self.volatility, width=15, textvariable=self.select_option_european)
-        self.input_option_volatility.grid(row=3, column=1, sticky='w')
+        self.input_option_volatility = ttk.Combobox(self.volatility, width=10, textvariable=self.select_option_european)
+        self.input_option_volatility.grid(row=3, column=3, sticky='w')
         self.input_option_volatility['values'] = ('Call Option', 'Put Option')
         self.input_option_volatility.current(0)
 
-        self.clear_volatility = Button(self.volatility, text="Clear", width=10, command=self.clearVolatility)
-        self.clear_volatility.grid(row=3, column=2, sticky='w')
-        self.clear_volatility = Button(self.volatility, text="Submit", width=10, command=self.doVolatility)
-        self.clear_volatility.grid(row=3, column=3, sticky='w')
+        self.clear_volatility = Button(self.volatility, text="Clear", width=6, command=self.clearVolatility)
+        self.clear_volatility.place(x=430, y=127)
+        self.clear_volatility = Button(self.volatility, text="Submit", width=6, command=self.doVolatility)
+        self.clear_volatility.place(x=430, y=97)
 
         Label(self.volatility, text='Result: ', fg='black', bg='white', font=("Times New Roman", 10, "bold")).grid(row=4,
                                                                                                                  column=0,
@@ -246,6 +256,7 @@ class Option_Pricer:
             t = (str) (self.input_start_time_european.get("1.0", "end"))
             T = (str) (self.input_maturity_european.get("1.0", "end"))
             r = (float) (self.input_rise_free_rate_european.get("1.0", "end"))
+            q = (float) (self.input_repo_european.get("1.0", "end"))
             sigma = (float) (self.input_volatility_european.get("1.0", "end"))
             option = self.input_option_european.get()
             if option == "Call Option":
@@ -254,7 +265,7 @@ class Option_Pricer:
                 option = 'P'
             result = "Spot Price: " + self.input_spot_price_european.get("1.0","end") + "Strike Price: " + self.input_strike_price_european.get("1.0", "end") + "Start Time: " + t + "End Time: " + T + \
                      "Risk free rate: " + self.input_rise_free_rate_european.get("1.0", "end") + "Volatility: " + self.input_volatility_european.get("1.0", "end") + "Option Type: " + self.input_option_european.get()
-            result += "\n\n\n" + "Result: " +  str(Black_Schonles_Formulas(S, K, t, T, sigma, r, option))
+            result += "\n\n\n" + "Result: " +  str(Black_Schonles_Formulas_new(S, K, t, T, sigma, r, q, option))
             self.european_result.insert(INSERT, result)
         except Exception as result:
             messagebox.showerror('Error', 'Input format error, please check your input.')
@@ -267,8 +278,14 @@ class Option_Pricer:
             t = (str)(self.input_start_time_volatility.get("1.0", "end"))
             T = (str)(self.input_maturity_volatility.get("1.0", "end"))
             r = (float)(self.input_rise_free_rate_volatility.get("1.0", "end"))
+            q = (float)(self.input_repo_volatility.get("1.0", "end"))
             sigma = (float)(self.input_option_price_volatility.get("1.0", "end"))
             option = self.input_option_volatility.get()
+            if option == "Call Option":
+                option = 'C'
+            else:
+                option = 'P'
+
 
         except Exception as res:
             messagebox.showerror('Error', 'Input format error, please check your input.')
