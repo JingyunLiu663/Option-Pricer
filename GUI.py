@@ -29,6 +29,8 @@ class Option_Pricer:
         self.menus.add_command(label="About", command=self.gotoAbout)
         self.menus.add_command(label="Exit", command=self.top_win.quit)
         # Set frames
+        # Main Frame
+        self.start_frame = tk.Frame(self.top_win, relief='ridge', borderwidth=3)
         # European Option
         self.european = tk.Frame(self.top_win, relief='ridge', borderwidth=3)
         self.volatility = tk.Frame(self.top_win, relief='ridge', borderwidth=3)
@@ -46,12 +48,42 @@ class Option_Pricer:
 
     # Set the
     def initComponments(self):
-        self.european.pack(fill=tk.BOTH, expand=True)
-        self.european.config(bg='white')
-        self.setEuropean()
+        self.start_frame.pack(fill=tk.BOTH, expand=True)
+        self.start_frame.config(bg='white')
+        # self.setEuropean()
+        self.useStart()
+
+    def useStart(self):
+        self.start_frame.pack_forget()
+        for widget in self.start_frame.winfo_children():
+            widget.destroy()
+
+        self.start_frame.pack(fill=tk.BOTH, expand=True)
+        self.european.pack_forget()
+        self.volatility.pack_forget()
+        self.arithmetic_asian.pack_forget()
+        self.geometric_asian.pack_forget()
+        self.arithmetic_basket.pack_forget()
+        self.geometric_basket.pack_forget()
+        self.american.pack_forget()
+        self.about.pack_forget()
+        self.top_win.title('Option Pricier')
+        self.start_frame.config(bg='white')
+        Label(self.start_frame, text='Option Pricier', fg='black', bg='white', font=("Times New Roman", 15, "bold")).pack()
+        self.btn_european = Button(self.start_frame, text="European Option", width=20, command=self.useEuropean).pack()
+        self.btn_volatility = Button(self.start_frame, text="Implied Volatility", width=20, command=self.useVolatility).pack()
+        self.btn_arithmetic_asian = Button(self.start_frame, text="Arithmetic Asian Option", width=20, command=self.useArithmeticAsian).pack()
+        self.btn_geometric_asian = Button(self.start_frame, text="Geometric Asian Option", width=20, command=self.useGeometricAsian).pack()
+        self.btn_arithmetic_basket = Button(self.start_frame, text="Arithmetic Basket", width=20, command=self.useArithmeticBasket).pack()
+        self.btn_geometric_basket = Button(self.start_frame, text="Geometric Basket", width=20, command=self.useGeometricBasket).pack()
+        self.btn_american = Button(self.start_frame, text="American Option", width=20, command=self.useAmerican).pack()
+        self.btn_about = Button(self.start_frame, text="About", width=20, command=self.gotoAbout).pack()
+        self.btn_exit = Button(self.start_frame, text="Exit", width=20, command=self.top_win.quit).pack()
+
 
     def useEuropean(self):
         self.european.pack(fill=tk.BOTH, expand=True)
+        self.start_frame.pack_forget()
         self.volatility.pack_forget()
         self.arithmetic_asian.pack_forget()
         self.geometric_asian.pack_forget()
@@ -65,6 +97,7 @@ class Option_Pricer:
 
     def useVolatility(self):
         self.volatility.pack(fill=tk.BOTH, expand=True)
+        self.start_frame.pack_forget()
         self.european.pack_forget()
         self.geometric_asian.pack_forget()
         self.arithmetic_asian.pack_forget()
@@ -78,6 +111,7 @@ class Option_Pricer:
 
     def useArithmeticAsian(self):
         self.arithmetic_asian.pack(fill=tk.BOTH, expand=True)
+        self.start_frame.pack_forget()
         self.european.pack_forget()
         self.volatility.pack_forget()
         self.geometric_asian.pack_forget()
@@ -91,6 +125,7 @@ class Option_Pricer:
 
     def useGeometricAsian(self):
         self.geometric_asian.pack(fill=tk.BOTH, expand=True)
+        self.start_frame.pack_forget()
         self.european.pack_forget()
         self.volatility.pack_forget()
         self.arithmetic_asian.pack_forget()
@@ -104,6 +139,7 @@ class Option_Pricer:
 
     def useArithmeticBasket(self):
         self.arithmetic_basket.pack(fill=tk.BOTH, expand=True)
+        self.start_frame.pack_forget()
         self.european.pack_forget()
         self.volatility.pack_forget()
         self.arithmetic_asian.pack_forget()
@@ -117,6 +153,7 @@ class Option_Pricer:
 
     def useGeometricBasket(self):
         self.geometric_basket.pack(fill=tk.BOTH, expand=True)
+        self.start_frame.pack_forget()
         self.european.pack_forget()
         self.volatility.pack_forget()
         self.arithmetic_asian.pack_forget()
@@ -131,6 +168,7 @@ class Option_Pricer:
 
     def useAmerican(self):
         self.american.pack(fill=tk.BOTH, expand=True)
+        self.start_frame.pack_forget()
         self.volatility.pack_forget()
         self.arithmetic_asian.pack_forget()
         self.geometric_asian.pack_forget()
@@ -145,6 +183,7 @@ class Option_Pricer:
 
     def gotoAbout(self):
         self.about.pack(fill=tk.BOTH, expand=True)
+        self.start_frame.pack_forget()
         self.american.pack_forget()
         self.arithmetic_asian.pack_forget()
         self.geometric_asian.pack_forget()
@@ -209,6 +248,8 @@ class Option_Pricer:
         self.clear_european.grid(row=3, column=3, sticky='w')
         self.clear_european = Button(self.european, text="Submit", width=10, command=self.doEuropeanOption)
         self.clear_european.grid(row=3, column=2, sticky='w')
+        self.back_european = Button(self.european, text="Back", width=10, command=self.useStart)
+        self.back_european.grid(row=4, column=1, sticky='w')
 
         Label(self.european, text='Result: ', fg='black', bg='white', font=("Times New Roman", 12, "bold")).grid(row=4, column=0, sticky='w')
         self.european_result = Text(self.european, height=12, width=82, borderwidth=2)
@@ -257,6 +298,8 @@ class Option_Pricer:
         self.clear_volatility.grid(row=3, column=3, sticky='w')
         self.submit_volatility = Button(self.volatility, text="Submit", width=10, command=self.doVolatility)
         self.submit_volatility.grid(row=3, column=2, sticky='w')
+        self.back_volatility = Button(self.volatility, text="Back", width=10, command=self.useStart)
+        self.back_volatility.grid(row=4, column=1, sticky='w')
 
         Label(self.volatility, text='Result: ', fg='black', bg='white', font=("Times New Roman", 12, "bold")).grid(row=4,
                                                                                                                  column=0,
@@ -313,6 +356,9 @@ class Option_Pricer:
 
         Label(self.arithmetic_asian, text='Result: ', fg='black', bg='white', font=("Times New Roman", 12, "bold")).grid(
             row=5, column=0, sticky='w')
+        self.back_arithmetic_asian = Button(self.arithmetic_asian, text="Back", width=10, command=self.useStart)
+        self.back_arithmetic_asian.grid(row=5, column=1, sticky='w')
+
 
         Label(self.arithmetic_asian, text='MC Path No.: ', fg='black', bg='white', font=("Times New Roman", 12, "bold")).grid(
             row=4, column=0, sticky='w')
@@ -389,15 +435,22 @@ class Option_Pricer:
         self.input_calculation_geometric_asian['values'] = ('Closed-Form Fomula', 'Standard MC')
         self.input_calculation_geometric_asian.current(0)
 
-        Label(self.geometric_asian, text='Result: ', fg='black', bg='white', font=("Times New Roman", 12, "bold")).grid(row=4, column=0, sticky='w')
+        Label(self.geometric_asian, text='MC Path No.: ', fg='black', bg='white', font=("Times New Roman", 12, "bold")).grid(row=4, column=0, sticky='w')
+        self.input_path_geometric_asian = Text(self.geometric_asian, height=1, width=23, borderwidth=2)
+        self.input_path_geometric_asian.grid(row=4, column=1, sticky='w')
+        self.input_path_geometric_asian.insert(INSERT, 'Used in Standard MC')
+
+        Label(self.geometric_asian, text='Result: ', fg='black', bg='white', font=("Times New Roman", 12, "bold")).grid(row=5, column=0, sticky='w')
 
         self.clear_geometric_asian = Button(self.geometric_asian, text="Clear", width=10, command=self.clearGeometricAsian)
-        self.clear_geometric_asian.place(x=220, y=165)
+        self.clear_geometric_asian.grid(row=4, column=3, sticky='w')
         self.submit_geometric_asian = Button(self.geometric_asian, text="Submit", width=10, command=self.doGeometricAsian)
-        self.submit_geometric_asian.place(x=120, y=165)
+        self.submit_geometric_asian.grid(row=4, column=2, sticky='w')
+        self.back_geometric_asian = Button(self.geometric_asian, text="Back", width=10, command=self.useStart)
+        self.back_geometric_asian.grid(row=5, column=1, sticky='w')
 
-        self.result_geometric_asian = Text(self.geometric_asian, height=12, width=82, borderwidth=2)
-        self.result_geometric_asian.place(x=5, y=195)
+        self.result_geometric_asian = Text(self.geometric_asian, height=9, width=82, borderwidth=2)
+        self.result_geometric_asian.place(x=5, y=227)
 
 
     def setArithmeticBasket(self):
@@ -477,13 +530,15 @@ class Option_Pricer:
             row=6, column=0, sticky='w')
         self.clear_arithmetic_basket = Button(self.arithmetic_basket, text="Clear", width=10,
                                              command=self.clearArithmeticBasket)
-        self.clear_arithmetic_basket.place(x=300, y=178)
+        self.clear_arithmetic_basket.grid(row=5, column=3, sticky='w')
         self.submit_arithmetic_basket = Button(self.arithmetic_basket, text="Submit", width=10,
                                               command=self.doArithmeticBasket)
-        self.submit_arithmetic_basket.place(x=400, y=178)
+        self.submit_arithmetic_basket.grid(row=5, column=2, sticky='w')
+        self.back_arithmetic_basket = Button(self.arithmetic_basket, text="Back", width=10, command=self.useStart)
+        self.back_arithmetic_basket.grid(row=6, column=1, sticky='w')
 
-        self.result_arithmetic_basket = Text(self.arithmetic_basket, height=10, width=82, borderwidth=2)
-        self.result_arithmetic_basket.place(x=5, y=230)
+        self.result_arithmetic_basket = Text(self.arithmetic_basket, height=9, width=82, borderwidth=2)
+        self.result_arithmetic_basket.place(x=5, y=240)
 
 
     def setGeometricBasket(self):
@@ -551,18 +606,30 @@ class Option_Pricer:
         self.input_calculation_geometric_basket['values'] = ('Closed-Form Fomula', 'Standard MC')
         self.input_calculation_geometric_basket.current(0)
 
-        Label(self.geometric_basket, text='Result: ', fg='black', bg='white',
+        Label(self.geometric_basket, text='MC Path No.: ', fg='black', bg='white',
               font=("Times New Roman", 12, "bold")).grid(
             row=5, column=0, sticky='w')
+        self.input_path_geometric_basket = Text(self.geometric_basket, height=1, width=23, borderwidth=2)
+        self.input_path_geometric_basket.grid(row=5, column=1, sticky='w')
+        self.input_path_geometric_basket.insert(INSERT, 'Used in Standard MC')
+
+        Label(self.geometric_basket, text='Result: ', fg='black', bg='white',
+              font=("Times New Roman", 12, "bold")).grid(
+            row=6, column=0, sticky='w')
+        self.back_geometric_basket = Button(self.geometric_basket, text="Back", width=10,
+                                             command=self.useStart)
+        self.back_geometric_basket.grid(row=6, column=1, sticky='w')
         self.clear_geometric_basket = Button(self.geometric_basket, text="Clear", width=10,
                                              command=self.clearGeometricBasket)
-        self.clear_geometric_basket.place(x=120, y=178)
+        self.clear_geometric_basket.grid(row=5, column=3, sticky='w')
         self.submit_geometric_basket = Button(self.geometric_basket, text="Submit", width=10,
                                               command=self.doGeometricBasket)
-        self.submit_geometric_basket.place(x=210, y=178)
+        self.submit_geometric_basket.grid(row=5, column=2, sticky='w')
+        self.back_geometric_basket = Button(self.geometric_basket, text="Back", width=10, command=self.useStart)
+        self.back_geometric_basket.grid(row=6, column=1, sticky='w')
 
-        self.result_geometric_basket = Text(self.geometric_basket, height=11, width=82, borderwidth=2)
-        self.result_geometric_basket.place(x=5, y=210)
+        self.result_geometric_basket = Text(self.geometric_basket, height=8, width=82, borderwidth=2)
+        self.result_geometric_basket.place(x=5, y=243)
 
     def setAmerican(self):
         Label(self.american, text='Spot Price: ', fg='black', bg='white',
@@ -612,18 +679,16 @@ class Option_Pricer:
 
         self.clear_american = Button(self.american, text="Clear", width=10,
                                              command=self.clearAmerican)
-        self.clear_american.place(x=320, y=110)
+        self.clear_american.grid(row=3, column=3, sticky='w')
         self.submit_american = Button(self.american, text="Submit", width=10,
                                               command=self.doAmerican)
-        self.submit_american.place(x=410, y=110)
+        self.submit_american.grid(row=3, column=2, sticky='w')
+        self.back_american= Button(self.american, text="Back", width=10, command=self.useStart)
+        self.back_american.grid(row=4, column=1, sticky='w')
 
         Label(self.american, text='Result: ', fg='black', bg='white', font=("Times New Roman", 12, "bold")).grid(row=4, column=0, sticky='w')
         self.result_american = Text(self.american, height=13, width=82, borderwidth=2)
         self.result_american.place(x=5, y=175)
-
-
-
-
 
 
     def setAbout(self):
@@ -690,6 +755,7 @@ class Option_Pricer:
         self.input_observe_geometric_asian.delete('1.0', 'end')
         # self.input_calculation_geometric_asian['values'] = ('Closed-Form Fomula', 'Standard MC')
         self.input_calculation_geometric_asian.current(0)
+        self.input_path_geometric_asian.delete('1.0', 'end')
         # self.input_option_geometric_asian['values'] = ('Call Option', 'Put Option')
         self.input_option_geometric_asian.current(0)
         self.result_geometric_asian.delete('1.0', 'end')
@@ -734,9 +800,10 @@ class Option_Pricer:
         self.input_rise_free_rate_geometric_basket.delete('1.0', 'end')
         self.input_maturity_geometric_basket.delete('1.0', 'end')
         self.input_correlation_geometric_basket.delete('1.0', 'end')
+        self.input_path_geometric_basket.delete('1.0', 'end')
         self.input_option_geometric_basket.current(0)
         self.input_calculation_geometric_basket.current(0)
-        self.result_arithmetic_basket.delete('1.0', 'end')
+        self.result_geometric_basket.delete('1.0', 'end')
 
     # Clear all fields in American Option
     def clearAmerican(self):
@@ -752,6 +819,7 @@ class Option_Pricer:
 
     # Calculate the European option price
     def doEuropeanOption(self):
+        self.european_result.delete('1.0', 'end')
         try:
             S = (float) (self.input_spot_price_european.get("1.0", "end"))
             K = (float) (self.input_strike_price_european.get("1.0", "end"))
@@ -775,6 +843,7 @@ class Option_Pricer:
 
     # Calculate the volatility
     def doVolatility(self):
+        self.result_volatility.delete('1.0', 'end')
         try:
             S = (float) (self.input_spot_price_volatility.get("1.0", "end"))
             K = (float) (self.input_strike_price_volatility.get("1.0", "end"))
@@ -801,7 +870,7 @@ class Option_Pricer:
         arithmetic asian MC with control variate
         arithmetic asian option with standard MC
         '''
-
+        self.result_arithmetic_asian.delete('1.0', 'end')
         try:
             S = (float) (self.input_spot_price_arithmetic_asian.get("1.0", "end"))
             K = (float) (self.input_strike_price_arithmetic_asian.get("1.0", "end"))
@@ -834,6 +903,7 @@ class Option_Pricer:
         geometric asian option with standard MC
         geometric asian option with the closed-form formula
         '''
+        self.result_geometric_asian.delete('1.0', 'end')
         try:
             S = (float) (self.input_spot_price_geometric_asian.get("1.0", "end"))
             K = (float) (self.input_strike_price_geometric_asian.get("1.0", "end"))
@@ -851,8 +921,10 @@ class Option_Pricer:
 
             if calculation == "Closed-Form Fomula":
                 result = geometric_asian_option(S, sigma, r, T, K, observe_num, option)
+                self.input_path_geometric_asian.delete('1.0', 'end')
             elif calculation == "Standard MC":
                 # To be modified
+                path_num = (int) (self.input_path_geometric_asian.get('1.0', 'end'))
                 result = arithmatic_asian_option(S, sigma, r, T, K, observe_num, option, 100, "geo")
 
             self.result_geometric_asian.insert(INSERT, result)
@@ -862,6 +934,7 @@ class Option_Pricer:
 
     def doArithmeticBasket(self):
         print("Arithmetic Basket")
+        self.result_arithmetic_basketn.delete('1.0', 'end')
         try:
             S1 = (float) (self.input_spot_price1_arithmetic_basket.get("1.0", "end"))
             S2 = (float) (self.input_spot_price2_arithmetic_basket.get("1.0", "end"))
@@ -892,6 +965,7 @@ class Option_Pricer:
 
     def doGeometricBasket(self):
         print("Geometric Basket")
+        self.result_geometric_basket.delete('1.0', 'end')
         try:
             S1 = (float)(self.input_spot_price1_geometric_basket.get("1.0", "end"))
             S2 = (float)(self.input_spot_price2_geometric_basket.get("1.0", "end"))
@@ -921,6 +995,7 @@ class Option_Pricer:
 
     def doAmerican(self):
         print("American")
+        self.result_american.delete('1.0', 'end')
         try:
             S = (float) (self.input_spot_price_american.get("1.0", "end"))
             sigma = (float) (self.input_volatility_american.get("1.0", "end"))
