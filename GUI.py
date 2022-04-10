@@ -985,7 +985,10 @@ class Option_Pricer:
 
             if calculation == "Closed-Form Fomula":
                 result = geometric_asian_option(S1, S2, sigma1, sigma2, correlation, r, T, K, option)
+                self.input_path_geometric_basket.delete('1.0', 'end')
             elif calculation == "Standard MC":
+                # 已加***
+                path_num = (int) (self.input_path_geometric_basket.get('1.0', 'end'))
                 result = arithmatic_basket_option(S1, S2, sigma1, sigma2, correlation, r, T, K, option, 100, 'geo')
 
             self.result_geometric_basket.insert(INSERT, result)
