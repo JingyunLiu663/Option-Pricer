@@ -40,13 +40,4 @@ def binomial_tree_american_option(S, sigma, r, T, K, N, option_type):
             payoff = np.maximum(payoff, K - S_t)
     return payoff[0]
 
-if __name__ == '__main__':
-    r = 0.1
-    T = 2
-    K = 40
-    N = 4
-    S = 50
-    sigma = 0.4
-    option_type = 'P'
-    bt_american = binomial_tree_american_option(S=S, sigma=sigma, r=r, T=T, K=K, N=N, option_type=option_type)
-    print("The american option's price is {}".format(bt_american))
+

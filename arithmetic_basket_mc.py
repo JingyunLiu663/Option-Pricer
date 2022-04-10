@@ -59,43 +59,4 @@ def arithmatic_basket_option(S1, S2, sigma1, sigma2, rho, r, T, K, option_type, 
     return target_mean, ci_lower, ci_upper
 
 
-if __name__ == "__main__":
-    r = 0.05
-    T = 3
-    K = 100
-    S1 = 100
-    S2 = 100
-    sigma1 = 0.3
-    sigma2 = 0.3
-    rho = 0.5
-    option_type = 'C'
-    m = 100000
-    p_basket_g, p_basket_g_l, p_basket_g_u = arithmatic_basket_option(S1=S1, S2=S2, sigma1=sigma1, sigma2=sigma2, \
-                                            rho=rho, r=r, T=T, K=K, option_type=option_type, m=m, control_method='geo')
-    print("The Geometric Basket Call Option (w/o control variate)'s price is {:.6f}, the lower bound is {:.6f}, the upper bound is {}"\
-          .format(p_basket_g, p_basket_g_l, p_basket_g_u))
-
-    p_basket_a, p_basket_a_l, p_basket_a_u = arithmatic_basket_option(S1=S1, S2=S2, sigma1=sigma1, sigma2=sigma2, \
-                                            rho=rho, r=r, T=T, K=K, option_type=option_type, m=m, control_method='arith')
-    p_basket_ac, p_basket_ac_l, p_basket_ac_u = arithmatic_basket_option(S1=S1, S2=S2, sigma1=sigma1, sigma2=sigma2, \
-                                            rho=rho, r=r, T=T, K=K, option_type=option_type, m=m, control_method='control')
-    print("The Arithmetic Basket Call Option (w/o control variate)'s price is {:.6f}, the lower bound is {:.6f}, the upper bound is {}"\
-          .format(p_basket_a, p_basket_a_l, p_basket_a_u))
-    print("The Arithmetic Basket Call Option (w control variate)'s price is {:.6f}, the lower bound is {:.6f}, the upper bound is {}"\
-          .format(p_basket_ac, p_basket_ac_l, p_basket_ac_u))
-    option_type = 'P'
-    p_basket_g, p_basket_g_l, p_basket_g_u = arithmatic_basket_option(S1=S1, S2=S2, sigma1=sigma1, sigma2=sigma2, \
-                                            rho=rho, r=r, T=T, K=K, option_type=option_type, m=m, control_method='geo')
-    print("The Geometric Basket Put Option (w/o control variate)'s price is {:.6f}, the lower bound is {:.6f}, the upper bound is {}"\
-          .format(p_basket_g, p_basket_g_l, p_basket_g_u))
-
-    p_basket_a, p_basket_a_l, p_basket_a_u = arithmatic_basket_option(S1=S1, S2=S2, sigma1=sigma1, sigma2=sigma2, \
-                                            rho=rho, r=r, T=T, K=K, option_type=option_type, m=m, control_method='arith')
-    p_basket_ac, p_basket_ac_l, p_basket_ac_u = arithmatic_basket_option(S1=S1, S2=S2, sigma1=sigma1, sigma2=sigma2, \
-                                            rho=rho, r=r, T=T, K=K, option_type=option_type, m=m, control_method='control')
-    print("The Arithmetic Basket Put Option (w/o control variate)'s price is {:.6f}, the lower bound is {:.6f}, the upper bound is {}"\
-          .format(p_basket_a, p_basket_a_l, p_basket_a_u))
-    print("The Arithmetic Basket Put Option (w control variate)'s price is {:.6f}, the lower bound is {:.6f}, the upper bound is {}"\
-          .format(p_basket_ac, p_basket_ac_l, p_basket_ac_u))
-
 
