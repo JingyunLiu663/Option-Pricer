@@ -3,7 +3,7 @@ from scipy.stats import norm
 import geometric_asian_basket as geo
 
 
-def arithmatic_asian_option(S, sigma, r, T, K, n, option_type, m, control_method='arith', \
+def arithmetic_asian_option(S, sigma, r, T, K, n, option_type, m=100000, control_method='arith', \
                             CI=0.95):
     '''
     The function is used to compute the price of an arithmatic asian option with Monte Carlo Simulation
