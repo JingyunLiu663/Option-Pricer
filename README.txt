@@ -1,4 +1,4 @@
-Group 5 - Option Pricer
+Option Pricer
 
 Please refer to the group5.pdf file for the report.
 
