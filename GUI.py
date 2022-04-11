@@ -861,7 +861,7 @@ class Option_Pricer:
             #     "1.0", "end") + "End Time: " + T + "Risk free rate: " + self.input_rise_free_rate_volatility.get("1.0","end") + "Option Price: " + self.input_option_price_volatility.get(
             #     "1.0", "end") + "Repo Rate: " + q + "Option Type: " + self.input_option_volatility.get()
             result = Implied_Volatility(S, K, 0, T, price, r, q, option)
-            self.european_result.insert(INSERT, result)
+            self.result_volatility.insert(INSERT, result)
         except Exception as res:
             messagebox.showerror('Error', 'Input format error, please check your input.')
 
