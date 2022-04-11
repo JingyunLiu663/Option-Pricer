@@ -71,7 +71,7 @@ def vega_dividend(S, K, t, T, r, q, sigma):
     period = T
     d1 = (np.log(S / K) + (r - q + 0.5 * sigma ** 2) * period) / (sigma * np.sqrt(period))
     vega = (1 / np.sqrt(2 * np.pi)) * S * np.exp(-q * period) * np.sqrt(period) * np.exp((-norm.cdf(d1, 0.0, 1.0) ** 2) * 0.5)
-    vega = S * np.exp(-q * period) * np.sqrt(period) * norm.pdf(d1, 0.0, 1.0)
+    # vega = S * np.exp(-q * period) * np.sqrt(period) * norm.pdf(d1, 0.0, 1.0)
     return vega
 
 
@@ -92,10 +92,14 @@ def Implied_Volatility(S, K, t, T, True_Val, r, q, option_type):
             return np.nan
 
     while sigma_differ >= tol and n < max_num:
-        val = Black_Schonles_Formulas_new(S, K, t, T, r, sigma, q, option_type)
+        val = Black_Schonles_Formulas_new(S, K, t, T, sigma, r, q, option_type)
         vega = vega_dividend(S, K, t, T, r, q, sigma)
         increment = (val - True_Val) / vega
         sigma = sigma - increment
         n = n + 1
         sigma_differ = abs(increment)
     return sigma
+
+# # (S, K, t, T, sigma, r, q, option_type)
+# print(Black_Schonles_Formulas_new(50, 50, 0, 0.5, 0.2, 0.01, 0, 'C'))
+# print(Implied_Volatility(50, 50, 0, 0.5, 2.9380121169138036, 0.01, 0, 'C'))
