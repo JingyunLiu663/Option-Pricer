@@ -2,11 +2,12 @@ import tkinter as tk
 from tkinter import *
 from tkinter import ttk, messagebox
 
-from EuropeanOption import Black_Schonles_Formulas, Black_Schonles_Formulas_new, Implied_Volatility
-from arithmetic_asian_mc import arithmatic_asian_option
+from EuropeanOption import Black_Schonles_Formulas_new, Implied_Volatility
+from arithmetic_asian_mc import arithmetic_asian_option
 from geometric_asian_basket import geometric_asian_option, geometric_basket_option
-from arithmetic_basket_mc import arithmatic_basket_option
+from arithmetic_basket_mc import arithmetic_basket_option
 from binomial_tree_american import binomial_tree_american_option
+from util import mc_output
 
 class Option_Pricer:
     def __init__(self):
@@ -432,7 +433,7 @@ class Option_Pricer:
         self.input_calculation_geometric_asian = ttk.Combobox(self.geometric_asian, width=21,
                                                          textvariable=self.select_calculation_geometric_asian)
         self.input_calculation_geometric_asian.grid(row=3, column=3, sticky='w')
-        self.input_calculation_geometric_asian['values'] = ('Closed-Form Fomula', 'Standard MC')
+        self.input_calculation_geometric_asian['values'] = ('Closed-Form Formula', 'Standard MC')
         self.input_calculation_geometric_asian.current(0)
 
         Label(self.geometric_asian, text='MC Path No.: ', fg='black', bg='white', font=("Times New Roman", 12, "bold")).grid(row=4, column=0, sticky='w')
@@ -603,7 +604,7 @@ class Option_Pricer:
         self.input_calculation_geometric_basket = ttk.Combobox(self.geometric_basket, width=21,
                                                               textvariable=self.select_calculation_geometric_basket)
         self.input_calculation_geometric_basket.grid(row=4, column=3, sticky='w')
-        self.input_calculation_geometric_basket['values'] = ('Closed-Form Fomula', 'Standard MC')
+        self.input_calculation_geometric_basket['values'] = ('Closed-Form Formula', 'Standard MC')
         self.input_calculation_geometric_basket.current(0)
 
         Label(self.geometric_basket, text='MC Path No.: ', fg='black', bg='white',
@@ -753,7 +754,7 @@ class Option_Pricer:
         self.input_spot_price_geometric_asian.delete('1.0', 'end')
         self.input_strike_price_geometric_asian.delete('1.0', 'end')
         self.input_observe_geometric_asian.delete('1.0', 'end')
-        # self.input_calculation_geometric_asian['values'] = ('Closed-Form Fomula', 'Standard MC')
+        # self.input_calculation_geometric_asian['values'] = ('Closed-Form Formula', 'Standard MC')
         self.input_calculation_geometric_asian.current(0)
         self.input_path_geometric_asian.delete('1.0', 'end')
         # self.input_option_geometric_asian['values'] = ('Call Option', 'Put Option')
@@ -888,11 +889,11 @@ class Option_Pricer:
                 option = 'P'
 
             if control == "With control variate":
-                result = arithmatic_asian_option(S, sigma, r, T, K, observe_num, option, path_num, "control")
+                result = arithmetic_asian_option(S, sigma, r, T, K, observe_num, option, path_num, "control")
             elif control == "Standard MC":
-                result = arithmatic_asian_option(S, sigma, r, T, K, observe_num, option, path_num, "arith")
+                result = arithmetic_asian_option(S, sigma, r, T, K, observe_num, option, path_num, "arith")
 
-            self.result_arithmetic_asian.insert(INSERT, result)
+            self.result_arithmetic_asian.insert(INSERT, mc_output(result))
 
 
         except Exception as res:
@@ -919,22 +920,23 @@ class Option_Pricer:
             else:
                 option = 'P'
 
-            if calculation == "Closed-Form Fomula":
+            if calculation == "Closed-Form Formula":
                 result = geometric_asian_option(S, sigma, r, T, K, observe_num, option)
                 self.input_path_geometric_asian.delete('1.0', 'end')
-            elif calculation == "Standard MC":
-                # To be modified
-                path_num = (int) (self.input_path_geometric_asian.get('1.0', 'end'))
-                result = arithmatic_asian_option(S, sigma, r, T, K, observe_num, option, 100, "geo")
 
-            self.result_geometric_asian.insert(INSERT, result)
+                self.result_geometric_asian.insert(INSERT, result)
+            elif calculation == "Standard MC":
+                path_num = (int) (self.input_path_geometric_asian.get('1.0', 'end'))
+                result = arithmetic_asian_option(S, sigma, r, T, K, observe_num, option, path_num, "geo")
+
+                self.result_geometric_asian.insert(INSERT, mc_output(result))
 
         except Exception:
             messagebox.showerror('Error', 'Input format error, please check your input.')
 
     def doArithmeticBasket(self):
         print("Arithmetic Basket")
-        self.result_arithmetic_basketn.delete('1.0', 'end')
+        self.result_arithmetic_basket.delete('1.0', 'end')
         try:
             S1 = (float) (self.input_spot_price1_arithmetic_basket.get("1.0", "end"))
             S2 = (float) (self.input_spot_price2_arithmetic_basket.get("1.0", "end"))
@@ -954,11 +956,11 @@ class Option_Pricer:
                 option = 'P'
 
             if control == "With control variate":
-                result = arithmatic_basket_option(S1, S2, sigma1, sigma2, correlation, r, T, K, option, path, 'control')
+                result = arithmetic_basket_option(S1, S2, sigma1, sigma2, correlation, r, T, K, option, path, 'control')
             elif control == "Standard MC":
-                result = arithmatic_basket_option(S1, S2, sigma1, sigma2, correlation, r, T, K, option, path, 'arith')
+                result = arithmetic_basket_option(S1, S2, sigma1, sigma2, correlation, r, T, K, option, path, 'arith')
 
-            self.result_arithmetic_basket.insert(INSERT, result)
+            self.result_arithmetic_basket.insert(INSERT, mc_output(result))
 
         except Exception as res:
             messagebox.showerror('Error', 'Input format error, please check your input.')
@@ -983,15 +985,16 @@ class Option_Pricer:
             else:
                 option = 'P'
 
-            if calculation == "Closed-Form Fomula":
-                result = geometric_asian_option(S1, S2, sigma1, sigma2, correlation, r, T, K, option)
+            if calculation == "Closed-Form Formula":
+                result = geometric_basket_option(S1, S2, sigma1, sigma2, correlation, r, T, K, option)
                 self.input_path_geometric_basket.delete('1.0', 'end')
+                self.result_geometric_basket.insert(INSERT, result)
             elif calculation == "Standard MC":
                 # 已加***
                 path_num = (int) (self.input_path_geometric_basket.get('1.0', 'end'))
-                result = arithmatic_basket_option(S1, S2, sigma1, sigma2, correlation, r, T, K, option, 100, 'geo')
+                result = arithmetic_basket_option(S1, S2, sigma1, sigma2, correlation, r, T, K, option, path_num, 'geo')
 
-            self.result_geometric_basket.insert(INSERT, result)
+                self.result_geometric_basket.insert(INSERT, mc_output(result))
 
         except Exception as res:
             messagebox.showerror('Error', 'Input format error, please check your input.')
