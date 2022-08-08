@@ -1,7 +1,5 @@
 # Option Pricer
 
-Please refer to the group5.pdf file for the report.
-
 ## To use the option pricer:
 1. install the requirements first:
    pip install -r requirements.txt
